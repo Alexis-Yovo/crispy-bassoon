@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIFS</title>
+    <style>
+        body,
+        html {
+            padding: 0;
+            margin: 0;
+        }
+
+        .conteneurGlobal {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            grid-column-gap: 0px;
+            grid-row-gap: 0px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .conteneurGlobal {
+                grid-template-columns: repeat(4, 1fr);
+                grid-template-rows: repeat(4, 1fr);
+            }
+        }
+
+        @media screen and (max-width: 425px) {
+            .conteneurGlobal {
+                grid-template-columns: repeat(1, 1fr);
+                grid-template-rows: repeat(1, 1fr);
+            }
+        }
+
+        .conteneurGlobal .conteneurImage {
+            width: 100%;
+            padding-top: 100%;
+            position: relative;
+        }
+
+        .conteneurGlobal .conteneurImage img {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://unpkg.com/axios@0.20.0-0/dist/axios.min.js"></script>
+    <script>
+        function afficherData(listGif) {
+            // Création du conteneur global
+            var conteneurGlobal = document.createElement('div');
+            conteneurGlobal.setAttribute('class', 'conteneurGlobal');
+
+            // Ajout des images dans le conteneur global
+            function remplirConteneurGlobale(gif) {
+                var url = gif.images.original.url;
+                var conteneurImage = document.createElement('div');
+                conteneurImage.setAttribute('class', 'conteneurImage');
+                conteneurImage.innerHTML = `<img loading='lazy' src='${url}' />`;
+                conteneurGlobal.appendChild(conteneurImage);
+                return url;
+            }
+            listGif.map(remplirConteneurGlobale);
+            document.body.appendChild(conteneurGlobal);
+        }
+
+        function recuperationDataOk(params) {
+            afficherData(params.data.data);
+        }
+
+        function recuperationData() {
+            axios.get('http://demo0306025.mockable.io/giphy').then(recuperationDataOk);
+        }
+
+        recuperationData();
+    </script>
+</body>
+
+</html>
